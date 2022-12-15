@@ -1,0 +1,104 @@
+version: '3'
+services:
+  zookeeper:
+    image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
+    container_name: zookeeper
+    command: [
+      "sh", "-c", "bin/zookeeper-server-start.sh config/zookeeper.properties"
+    ]
+    ports:
+      - "2181:2181"
+    environment:
+      LOG_DIR: /tmp/logs
+    networks:
+      - comments-network
+
+  kafka:
+    image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
+    container_name: kafka
+    command: [
+      "sh", "-c",
+      "bin/kafka-server-start.sh config/server.properties --override listeners=$${KAFKA_LISTENERS} --override advertised.listeners=$${KAFKA_ADVERTISED_LISTENERS} --override zookeeper.connect=$${KAFKA_ZOOKEEPER_CONNECT}"
+    ]
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      LOG_DIR: "/tmp/logs"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    networks:
+      - comments-network
+
+#  db:
+#    image: postgres
+#    restart: always
+#    environment:
+#      - POSTGRES_USER=andrii
+#      - POSTGRES_PASSWORD=andrii
+#      - POSTGRES_DB=comments
+#    ports:
+#      - '5432:5432'
+#    networks:
+#      - comments-network
+#    volumes:
+#      - db:/var/lib/postgresql/data
+#
+#  comment-producer:
+#    image: localhost/quarkus/comment-producer-jvm
+#    build:
+#      context: producer
+#      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
+#    container_name: comment-producer
+#    depends_on:
+#      - kafka
+#    ports:
+#      - "8080:8080"
+#    networks:
+#      - comments-network
+#    environment:
+#      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
+
+#  comment-filter:
+#    image: localhost/quarkus/comment-filter-jvm
+#    build:
+#      context: filter
+#      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
+#    container_name: comment-filter
+#    depends_on:
+#      - kafka
+#    ports:
+#      - "8081:8080"
+#    networks:
+#      - comments-network
+#    environment:
+#      UA_APRYBY_COMMENT_WORDS_BLACKLIST: Putin,trash,shit
+#      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
+
+#  comment-consumer:
+#    image: localhost/quarkus/comment-consumer-jvm
+#    build:
+#      context: consumer
+#      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
+#    container_name: comment-consumer
+#    depends_on:
+#      - kafka
+#      - db
+#    ports:
+#      - "8082:8080"
+#    networks:
+#      - comments-network
+#    environment:
+#      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
+#      QUARKUS_DATASOURCE_USERNAME: 'andrii'
+#      QUARKUS_DATASOURCE_PASSWORD: 'andrii'
+#      QUARKUS_DATASOURCE_JDBC_URL: 'jdbc:postgresql://db:5432/comments'
+
+networks:
+  comments-network:
+    name: kafka
+
+#volumes:
+#  db:
