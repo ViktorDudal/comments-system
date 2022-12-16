@@ -16,6 +16,7 @@ class KafkaMessageConsumer {
     @Transactional
     fun retrieveComment(record: ConsumerRecord<String, String>) {
         val comment = Comment(record.key(), record.value())
+        comment.persistAndFlush()
         println("Get next comment: postId = ${comment.postId} with message - ${comment.commentMessage}, time - ${record.timestamp()}")
     }
 
@@ -24,6 +25,7 @@ class KafkaMessageConsumer {
     @Transactional
     fun retrieveBlackListComment(record: ConsumerRecord<String, String>) {
         val comment = Comment(record.key(), record.value())
+        comment.persistAndFlush()
         println("Get next comment: postId = ${comment.postId} with message - ${comment.commentMessage}, time - ${record.timestamp()}")
     }
 
