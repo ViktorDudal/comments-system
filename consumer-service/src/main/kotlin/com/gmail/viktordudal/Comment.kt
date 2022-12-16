@@ -11,11 +11,13 @@ class Comment : PanacheEntity {
     companion object: PanacheCompanion<Comment>
     lateinit var postId: String
     lateinit var commentMessage: String
+    lateinit var dateTime: String
 
     constructor()
 
-    constructor(postId: String, commentMessage: String) {
+    constructor(postId: String, commentMessage: String, dateTime: String) {
         this.postId = postId
         this.commentMessage = commentMessage
+        this.dateTime = dateTime
     }
 }
