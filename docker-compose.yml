@@ -46,12 +46,12 @@ services:
 #    volumes:
 #      - db:/var/lib/postgresql/data
 #
-#  comment-producer:
-#    image: localhost/quarkus/comment-producer-jvm
+#  producer-service:
+#    image: localhost/quarkus/producer-service-jvm
 #    build:
-#      context: producer
+#      context: producer-service
 #      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
-#    container_name: comment-producer
+#    container_name: producer-service
 #    depends_on:
 #      - kafka
 #    ports:
@@ -60,7 +60,7 @@ services:
 #      - comments-network
 #    environment:
 #      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
-
+#
 #  comment-filter:
 #    image: localhost/quarkus/comment-filter-jvm
 #    build:

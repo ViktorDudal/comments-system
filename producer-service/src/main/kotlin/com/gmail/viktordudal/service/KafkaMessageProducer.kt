@@ -2,7 +2,6 @@ package com.gmail.viktordudal.service
 
 import com.gmail.viktordudal.model.Comment
 import io.smallrye.reactive.messaging.kafka.api.OutgoingKafkaRecordMetadata
-import mu.KotlinLogging
 import org.eclipse.microprofile.reactive.messaging.Channel
 import org.eclipse.microprofile.reactive.messaging.Emitter
 import org.eclipse.microprofile.reactive.messaging.Message
@@ -10,7 +9,7 @@ import javax.enterprise.context.ApplicationScoped
 
 @ApplicationScoped
 class KafkaMessageProducer(
-    @Channel(value = "comments_requests")
+    @Channel("comments_requests")
     private val emitter: Emitter<String>
 ) {
 
