@@ -45,7 +45,7 @@ services:
       - comments-system
     volumes:
       - db:/var/lib/postgresql/data
-#
+
 #  producer-service:
 #    image: localhost/quarkus/producer-service-jvm
 #    build:
@@ -61,40 +61,36 @@ services:
 #    environment:
 #      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
 #
-#  comment-filter:
-#    image: localhost/quarkus/comment-filter-jvm
+#  filter-service:
+#    image: localhost/quarkus/filter-service-jvm
 #    build:
-#      context: filter
+#      context: filter-service
 #      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
-#    container_name: comment-filter
+#    container_name: filter-service
 #    depends_on:
 #      - kafka
 #    ports:
-#      - "8081:8080"
+#      - "8090:8080"
 #    networks:
 #      - comments-system
 #    environment:
-#      UA_APRYBY_COMMENT_WORDS_BLACKLIST: Putin,trash,shit
 #      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
-
-#  comment-consumer:
-#    image: localhost/quarkus/comment-consumer-jvm
+#
+#  consumer-service:
+#    image: localhost/quarkus/consumer-service-jvm
 #    build:
-#      context: consumer
+#      context: consumer-service
 #      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
-#    container_name: comment-consumer
+#    container_name: consumer-service
 #    depends_on:
 #      - kafka
 #      - db
 #    ports:
-#      - "8082:8080"
+#      - "8091:8080"
 #    networks:
 #      - comments-system
 #    environment:
 #      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
-#      QUARKUS_DATASOURCE_USERNAME: 'andrii'
-#      QUARKUS_DATASOURCE_PASSWORD: 'andrii'
-#      QUARKUS_DATASOURCE_JDBC_URL: 'jdbc:postgresql://db:5432/comments'
 
 networks:
   comments-system:
