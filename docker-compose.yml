@@ -11,7 +11,7 @@ services:
     environment:
       LOG_DIR: /tmp/logs
     networks:
-      - comments-network
+      - comments-system
 
   kafka:
     image: quay.io/strimzi/kafka:0.23.0-kafka-2.8.0
@@ -30,21 +30,21 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     networks:
-      - comments-network
+      - comments-system
 
-#  db:
-#    image: postgres
-#    restart: always
-#    environment:
-#      - POSTGRES_USER=andrii
-#      - POSTGRES_PASSWORD=andrii
-#      - POSTGRES_DB=comments
-#    ports:
-#      - '5432:5432'
-#    networks:
-#      - comments-network
-#    volumes:
-#      - db:/var/lib/postgresql/data
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=comments_system
+    ports:
+      - '5432:5432'
+    networks:
+      - comments-system
+    volumes:
+      - db:/var/lib/postgresql/data
 #
 #  producer-service:
 #    image: localhost/quarkus/producer-service-jvm
@@ -57,7 +57,7 @@ services:
 #    ports:
 #      - "8080:8080"
 #    networks:
-#      - comments-network
+#      - comments-system
 #    environment:
 #      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
 #
@@ -72,7 +72,7 @@ services:
 #    ports:
 #      - "8081:8080"
 #    networks:
-#      - comments-network
+#      - comments-system
 #    environment:
 #      UA_APRYBY_COMMENT_WORDS_BLACKLIST: Putin,trash,shit
 #      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
@@ -89,7 +89,7 @@ services:
 #    ports:
 #      - "8082:8080"
 #    networks:
-#      - comments-network
+#      - comments-system
 #    environment:
 #      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
 #      QUARKUS_DATASOURCE_USERNAME: 'andrii'
@@ -97,8 +97,8 @@ services:
 #      QUARKUS_DATASOURCE_JDBC_URL: 'jdbc:postgresql://db:5432/comments'
 
 networks:
-  comments-network:
+  comments-system:
     name: kafka
 
-#volumes:
-#  db:
+volumes:
+  db:
