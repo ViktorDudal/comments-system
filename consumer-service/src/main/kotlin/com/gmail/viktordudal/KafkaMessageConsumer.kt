@@ -18,7 +18,7 @@ class KafkaMessageConsumer {
     @Blocking
     @Transactional
     fun retrieveComment(record: ConsumerRecord<String, String>) {
-        val comment = Comment(record.key(), record.value(), getDateTime(record.timestamp()))
+        val comment = Comment(record.key(), record.value(), getDateTime(record.timestamp()), MessageType.WHITELIST)
         comment.persistAndFlush()
         println("Get next comment: postId = ${comment.postId} with message - ${comment.commentMessage}, time - ${record.timestamp()}")
     }
@@ -27,13 +27,14 @@ class KafkaMessageConsumer {
     @Blocking
     @Transactional
     fun retrieveBlackListComment(record: ConsumerRecord<String, String>) {
-        val comment = Comment(record.key(), record.value(), getDateTime(record.timestamp()))
+        val comment = Comment(record.key(), record.value(), getDateTime(record.timestamp()), MessageType.BLACKLIST)
         comment.persistAndFlush()
         println("Get next comment: postId = ${comment.postId} with message - ${comment.commentMessage}, time - ${record.timestamp()}")
     }
 
-    private fun getDateTime(time: Long) : String = Instant.ofEpochSecond(time)
+    private fun getDateTime(time: Long) : String = Instant.ofEpochMilli(time)
         .atZone(ZoneId.systemDefault())
-        .toLocalDateTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        .toLocalDateTime()
+        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
 
 }
