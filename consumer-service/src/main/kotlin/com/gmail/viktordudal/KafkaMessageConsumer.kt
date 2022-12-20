@@ -19,6 +19,7 @@ class KafkaMessageConsumer {
     @Transactional
     fun retrieveComment(record: ConsumerRecord<String, String>) {
         val comment = Comment(record.key(), record.value(), getDateTime(record.timestamp()), MessageType.WHITELIST)
+        println("------------------------------------------------------------------------------")
         comment.persistAndFlush()
         println("Get next comment: postId = ${comment.postId} with message - ${comment.commentMessage}, time - ${record.timestamp()}")
     }

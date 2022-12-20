@@ -18,7 +18,8 @@ class CommentResource(
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @NonBlocking
-    fun postComment(@Valid comment: Comment) {
+    fun postComment(@Valid comment: Comment) :Comment {
         messageService.sendMessage(comment)
+        return comment
     }
 }
