@@ -10,7 +10,7 @@ import javax.ws.rs.Path
 import javax.ws.rs.core.MediaType
 
 @Path("/send-comment")
-class CommentResource(
+class CommentSenderResource(
     private val messageService : MessageService
 ) {
 

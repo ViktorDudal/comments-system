@@ -15,10 +15,10 @@ class KafkaMessageProducer(
 
     fun sendMessage(comment: Comment) = emitter.send(createCommentMessage(comment))
 
-    private fun createCommentMessage(comment: Comment): Message<String?> = Message.of(comment.commentMessage)
-            .addMetadata(
-                OutgoingKafkaRecordMetadata.OutgoingKafkaRecordMetadataBuilder<String>()
-                    .withKey(comment.postId).build()
-            )
+    private fun createCommentMessage(comment: Comment) = Message.of(comment.commentMessage)
+        .addMetadata(
+            OutgoingKafkaRecordMetadata.OutgoingKafkaRecordMetadataBuilder<String>()
+                .withKey(comment.postId).build()
+        )
 
 }
