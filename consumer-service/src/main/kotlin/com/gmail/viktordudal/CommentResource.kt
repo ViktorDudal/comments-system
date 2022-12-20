@@ -13,7 +13,16 @@ class CommentResource {
     @GET
     @Transactional
     fun getAllComments() : List<Comment> {
+        println("+++++++++++++++++++++++ GET ALL +++++++++++++++++++++++++++++++")
         return Comment.listAll()
+    }
+
+    @POST
+    @Transactional
+    fun randomComments() : Comment {
+        val comment = Comment("postID", "Message content in consumer service", "time", MessageType.WHITELIST)
+        comment.persistAndFlush()
+        return comment
     }
 
     @GET

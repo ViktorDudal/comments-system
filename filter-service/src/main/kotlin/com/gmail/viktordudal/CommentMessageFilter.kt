@@ -22,9 +22,13 @@ class CommentMessageFilter(
     fun retrieveComment(record: ConsumerRecord<String, String>) {
         val comment = Comment(record.key(), record.value())
         if (blackList.stream().anyMatch { comment.commentMessage.contains(it) } ) {
+            println("----------------------------------------------------------------------------------------------------------------")
             sendBadMessage(comment)
-            } else {
+            println("Bad Comment: ${comment.postId} and message - ${comment.commentMessage}")
+        } else {
+            println("----------------------------------------------------------------------------------------------------------------")
                 sendGoodMessage(comment)
+            println("Good Comment: ${comment.postId} and message - ${comment.commentMessage}")
             }
     }
 

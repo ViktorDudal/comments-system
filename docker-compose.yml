@@ -26,7 +26,7 @@ services:
       - "9092:9092"
     environment:
       LOG_DIR: "/tmp/logs"
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     networks:
@@ -38,7 +38,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=comments_system
+      - POSTGRES_DB=comments
     ports:
       - '5432:5432'
     networks:
@@ -46,54 +46,54 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
 
-#  producer-service:
-#    image: localhost/quarkus/producer-service-jvm
-#    build:
-#      context: producer-service
-#      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
-#    container_name: producer-service
-#    depends_on:
-#      - kafka
-#    ports:
-#      - "8080:8080"
-#    networks:
-#      - comments-system
-#    environment:
-#      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
-#
-#  filter-service:
-#    image: localhost/quarkus/filter-service-jvm
-#    build:
-#      context: filter-service
-#      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
-#    container_name: filter-service
-#    depends_on:
-#      - kafka
-#    ports:
-#      - "8090:8080"
-#    networks:
-#      - comments-system
-#    environment:
-#      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
-#
-#  consumer-service:
-#    image: localhost/quarkus/consumer-service-jvm
-#    build:
-#      context: consumer-service
-#      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
-#    container_name: consumer-service
-#    depends_on:
-#      - kafka
-#      - db
-#    ports:
-#      - "8091:8080"
-#    networks:
-#      - comments-system
-#    environment:
-#      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
-#      QUARKUS_DATASOURCE_USERNAME: 'postgres'
-#      QUARKUS_DATASOURCE_PASSWORD: 'postgres'
-#      QUARKUS_DATASOURCE_JDBC_URL: 'jdbc:postgresql://db:5432/comments-system'
+  producer-service:
+    image: localhost/quarkus/producer-service-jvm
+    build:
+      context: producer-service
+      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
+    container_name: producer-service
+    depends_on:
+      - kafka
+    ports:
+      - "8080:8080"
+    networks:
+      - comments-system
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
+
+  filter-service:
+    image: localhost/quarkus/filter-service-jvm
+    build:
+      context: filter-service
+      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
+    container_name: filter-service
+    depends_on:
+      - kafka
+    ports:
+      - "8090:8080"
+    networks:
+      - comments-system
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
+
+  consumer-service:
+    image: localhost/quarkus/consumer-service-jvm
+    build:
+      context: consumer-service
+      dockerfile: src/main/docker/Dockerfile.${QUARKUS_MODE:-jvm}
+    container_name: consumer-service
+    depends_on:
+      - kafka
+      - db
+    ports:
+      - "8091:8080"
+    networks:
+      - comments-system
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: 'kafka:9092'
+      QUARKUS_DATASOURCE_USERNAME: 'postgres'
+      QUARKUS_DATASOURCE_PASSWORD: 'postgres'
+      QUARKUS_DATASOURCE_JDBC_URL: 'jdbc:postgresql://db:5432/comments'
 
 networks:
   comments-system:

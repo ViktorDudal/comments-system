@@ -19,7 +19,7 @@ class KafkaMessageConsumer {
     @Transactional
     fun retrieveComment(record: ConsumerRecord<String, String>) {
         val comment = Comment(record.key(), record.value(), getDateTime(record.timestamp()), MessageType.WHITELIST)
-        println("------------------------------------------------------------------------------")
+        println("----------------------DB Good Comment Started--------------------------------------------------------")
         comment.persistAndFlush()
         println("Get next comment: postId = ${comment.postId} with message - ${comment.commentMessage}, time - ${record.timestamp()}")
     }
@@ -29,6 +29,7 @@ class KafkaMessageConsumer {
     @Transactional
     fun retrieveBlackListComment(record: ConsumerRecord<String, String>) {
         val comment = Comment(record.key(), record.value(), getDateTime(record.timestamp()), MessageType.BLACKLIST)
+        println("----------------------DB Bad Comment Started--------------------------------------------------------")
         comment.persistAndFlush()
         println("Get next comment: postId = ${comment.postId} with message - ${comment.commentMessage}, time - ${record.timestamp()}")
     }
