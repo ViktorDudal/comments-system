@@ -13,16 +13,12 @@ class KafkaMessageProducer(
     private val emitter: Emitter<String>
 ) {
 
-    fun sendMessage(comment: Comment) {
-        emitter.send(createCommentMessage(comment))
-    }
+    fun sendMessage(comment: Comment) = emitter.send(createCommentMessage(comment))
 
-    private fun createCommentMessage(comment: Comment): Message<String?> {
-        return  Message.of(comment.commentMessage)
+    private fun createCommentMessage(comment: Comment): Message<String?> = Message.of(comment.commentMessage)
             .addMetadata(
                 OutgoingKafkaRecordMetadata.OutgoingKafkaRecordMetadataBuilder<String>()
                     .withKey(comment.postId).build()
             )
-    }
 
 }

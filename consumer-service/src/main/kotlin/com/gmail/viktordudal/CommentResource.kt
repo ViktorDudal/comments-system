@@ -5,7 +5,7 @@ import javax.enterprise.context.ApplicationScoped
 import javax.transaction.Transactional
 import javax.ws.rs.*
 
-@Path("comment")
+@Path("comments")
 @ApplicationScoped
 @Produces("application/json")
 class CommentResource {
