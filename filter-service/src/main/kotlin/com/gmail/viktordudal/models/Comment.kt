@@ -1,4 +1,4 @@
-package com.gmail.viktordudal
+package com.gmail.viktordudal.models
 
 class Comment(
     val postId: String,
