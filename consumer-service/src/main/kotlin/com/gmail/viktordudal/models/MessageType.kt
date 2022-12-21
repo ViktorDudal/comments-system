@@ -1,4 +1,4 @@
-package com.gmail.viktordudal
+package com.gmail.viktordudal.models
 
 enum class MessageType {
     WHITELIST, BLACKLIST

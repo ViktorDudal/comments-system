@@ -1,5 +1,7 @@
-package com.gmail.viktordudal
+package com.gmail.viktordudal.service
 
+import com.gmail.viktordudal.models.Comment
+import com.gmail.viktordudal.models.MessageType
 import io.smallrye.reactive.messaging.annotations.Blocking
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.eclipse.microprofile.reactive.messaging.Incoming
@@ -19,9 +21,7 @@ class KafkaMessageConsumer {
     @Transactional
     fun retrieveComment(record: ConsumerRecord<String, String>) {
         val comment = Comment(record.key(), record.value(), getDateTime(record.timestamp()), MessageType.WHITELIST)
-        println("----------------------DB Good Comment Started--------------------------------------------------------")
         comment.persistAndFlush()
-        println("Get next comment: postId = ${comment.postId} with message - ${comment.commentMessage}, time - ${record.timestamp()}")
     }
 
     @Incoming("comments_blacklist")
@@ -29,14 +29,12 @@ class KafkaMessageConsumer {
     @Transactional
     fun retrieveBlackListComment(record: ConsumerRecord<String, String>) {
         val comment = Comment(record.key(), record.value(), getDateTime(record.timestamp()), MessageType.BLACKLIST)
-        println("----------------------DB Bad Comment Started--------------------------------------------------------")
         comment.persistAndFlush()
-        println("Get next comment: postId = ${comment.postId} with message - ${comment.commentMessage}, time - ${record.timestamp()}")
     }
 
-    private fun getDateTime(time: Long) : String = Instant.ofEpochMilli(time)
+    private fun getDateTime(time: Long) = Instant.ofEpochMilli(time)
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime()
-        .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+        .format(DateTimeFormatter.ISO_DATE_TIME)
 
 }

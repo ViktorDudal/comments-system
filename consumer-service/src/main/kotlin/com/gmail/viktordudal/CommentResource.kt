@@ -1,9 +1,13 @@
 package com.gmail.viktordudal
 
+import com.gmail.viktordudal.models.Comment
+import com.gmail.viktordudal.models.MessageType
 import org.jboss.resteasy.reactive.RestPath
 import javax.enterprise.context.ApplicationScoped
 import javax.transaction.Transactional
-import javax.ws.rs.*
+import javax.ws.rs.GET
+import javax.ws.rs.Path
+import javax.ws.rs.Produces
 
 @Path("comments")
 @ApplicationScoped
@@ -12,36 +16,18 @@ class CommentResource {
 
     @GET
     @Transactional
-    fun getAllComments() : List<Comment> {
-        println("+++++++++++++++++++++++ GET ALL +++++++++++++++++++++++++++++++")
-        return Comment.listAll()
-    }
-
-    @POST
-    @Transactional
-    fun randomComments() : Comment {
-        val comment = Comment("postID", "Message content in consumer service", "time", MessageType.WHITELIST)
-        comment.persistAndFlush()
-        return comment
-    }
+    fun getAllComments() = Comment.listAll()
 
     @GET
     @Path("{id}")
-    fun getSingleComment(@RestPath id: Long): Comment {
-        return Comment.findById(id)
-            ?: throw WebApplicationException("Comment with id of $id does not exist.", 404)
-    }
+    fun getSingleComment(@RestPath id: Long)= Comment.findById(id)
 
     @GET
     @Path("searchWhitelisted")
-    fun getWhitelistedComments(): List<Comment> {
-        return Comment.list("messageType", MessageType.WHITELIST)
-    }
+    fun getWhitelistedComments() = Comment.list("messageType", MessageType.WHITELIST)
 
     @GET
     @Path("searchBlacklisted")
-    fun getBlacklistedComments(): List<Comment> {
-        return Comment.list("messageType", MessageType.BLACKLIST)
-    }
+    fun getBlacklistedComments() = Comment.list("messageType", MessageType.BLACKLIST)
 
 }

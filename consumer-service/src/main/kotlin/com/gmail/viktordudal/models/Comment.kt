@@ -1,4 +1,4 @@
-package com.gmail.viktordudal
+package com.gmail.viktordudal.models
 
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheCompanion
 import io.quarkus.hibernate.orm.panache.kotlin.PanacheEntity
@@ -13,16 +13,16 @@ class Comment : PanacheEntity {
     companion object: PanacheCompanion<Comment>
     lateinit var postId: String
     lateinit var commentMessage: String
-    lateinit var dateTime: String
+    lateinit var timestamp: String
     @Enumerated(EnumType.STRING)
     lateinit var messageType: MessageType
 
     constructor()
 
-    constructor(postId: String, commentMessage: String, dateTime: String, messageType: MessageType) {
+    constructor(postId: String, commentMessage: String, timestamp: String, messageType: MessageType) {
         this.postId = postId
         this.commentMessage = commentMessage
-        this.dateTime = dateTime
+        this.timestamp = timestamp
         this.messageType = messageType
     }
 }
