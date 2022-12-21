@@ -1,7 +1,6 @@
 package com.gmail.viktordudal
 
-import com.gmail.viktordudal.models.Comment
-import com.gmail.viktordudal.models.MessageType
+import com.gmail.viktordudal.service.CommentService
 import org.jboss.resteasy.reactive.RestPath
 import javax.enterprise.context.ApplicationScoped
 import javax.transaction.Transactional
@@ -12,22 +11,25 @@ import javax.ws.rs.Produces
 @Path("comments")
 @ApplicationScoped
 @Produces("application/json")
-class CommentResource {
+class CommentResource(
+    private var commentService: CommentService
+)
+{
 
     @GET
     @Transactional
-    fun getAllComments() = Comment.listAll()
+    fun getAll() = commentService.getAllComments()
 
     @GET
     @Path("{id}")
-    fun getSingleComment(@RestPath id: Long)= Comment.findById(id)
+    fun getSingleComment(@RestPath id: Long)= commentService.getSingleComment(id)
 
     @GET
     @Path("searchWhitelisted")
-    fun getWhitelistedComments() = Comment.list("messageType", MessageType.WHITELIST)
+    fun getWhitelistedComments() = commentService.getWhitelistedComments()
 
     @GET
     @Path("searchBlacklisted")
-    fun getBlacklistedComments() = Comment.list("messageType", MessageType.BLACKLIST)
+    fun getBlacklistedComments() = commentService.getBlacklistedComments()
 
 }
