@@ -5,6 +5,7 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import org.apache.commons.lang3.RandomStringUtils
+import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.Test
 
@@ -114,36 +115,32 @@ class CommentSenderResourceTest {
 
     @Test
     fun testNullBothPostIdAndCommentMessage() {
-        val response = given()
+        given()
             .body("{\"postId\": null, \"commentMessage\": null}")
             .header(CONTENT_TYPE, CONTENT_TYPE_JSON)
         .`when`()
             .post(URL)
         .then()
             .statusCode(400)
-            .extract()
-            .body()
-            .asString()
-
-        assert(response.contains(EMPTY_OR_NULL_POST_ID_ERROR_MESSAGE))
-        assert(response.contains(NULL_COMMENT_MESSAGE_ERROR))
+            .body(
+                containsString(EMPTY_OR_NULL_POST_ID_ERROR_MESSAGE),
+                containsString(NULL_COMMENT_MESSAGE_ERROR)
+            )
     }
 
     @Test
     fun testEmptyBothPostIdAndCommentMessage() {
-        val response = given()
+        given()
             .body("{\"postId\": \"\", \"commentMessage\": \"\"}")
             .header(CONTENT_TYPE, CONTENT_TYPE_JSON)
         .`when`()
             .post(URL)
         .then()
             .statusCode(400)
-            .extract()
-            .body()
-            .asString()
-
-        assert(response.contains(EMPTY_OR_NULL_POST_ID_ERROR_MESSAGE))
-        assert(response.contains(NOT_VALID_COMMENT_MESSAGE_ERROR))
+            .body(
+                containsString(EMPTY_OR_NULL_POST_ID_ERROR_MESSAGE),
+                containsString(NOT_VALID_COMMENT_MESSAGE_ERROR)
+            )
     }
 
 }
