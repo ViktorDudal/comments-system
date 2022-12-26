@@ -10,7 +10,7 @@ class CommentService {
 
     fun getAllComments() = Comment.listAll()
 
-    fun getSingleComment(@RestPath id: Long)= Comment.findById(id)
+    fun getCommentById(@RestPath id: Long)= Comment.findById(id)
 
     fun getWhitelistedComments() = Comment.list("messageType", MessageType.WHITELIST)
 

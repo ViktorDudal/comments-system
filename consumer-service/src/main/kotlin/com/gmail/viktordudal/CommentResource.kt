@@ -18,11 +18,11 @@ class CommentResource(
 
     @GET
     @Transactional
-    fun getAll() = commentService.getAllComments()
+    fun getAllComments() = commentService.getAllComments()
 
     @GET
     @Path("{id}")
-    fun getSingleComment(@RestPath id: Long)= commentService.getSingleComment(id)
+    fun getCommentById(@RestPath id: Long)= commentService.getCommentById(id)
 
     @GET
     @Path("searchWhitelisted")

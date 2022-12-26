@@ -17,7 +17,7 @@ class CommentMessageFilter(
     private val blackListEmitter: Emitter<String>
 ) {
 
-    private final val blackList = listOf("rusnia", "gribana")
+    private final val blackList = listOf("bollocks", "bullshit", "shit", "trash")
 
     @Incoming("comments_requests")
     fun retrieveComment(record: ConsumerRecord<String, String>) {
