@@ -15,6 +15,14 @@ import org.mockito.Mockito.`when`
 @QuarkusTest
 class CommentResourceTest {
 
+    companion object {
+        const val CORRECT_COMMENT_MESSAGE = "Correct comment message"
+        const val INCORRECT_COMMENT_MESSAGE = "Comment message with blacklisted word"
+        const val POST_ID_FIELD = "postId"
+        const val TIMESTAMP_FIELD = "2011-12-03T10:15:30"
+        const val URL = "/comments"
+    }
+
     @InjectSpy
     lateinit var commentService : CommentService
 
@@ -22,13 +30,13 @@ class CommentResourceTest {
     fun testGetAllComments() {
         `when`(commentService.getAllComments()).thenReturn(getListOfComments)
         given()
-            .`when`().get("/comments")
+            .`when`().get(URL)
             .then()
             .statusCode(200)
             .body(
-                containsString("postId"),
-                containsString("Correct comment message"),
-                containsString("2011-12-03T10:15:30")
+                containsString(POST_ID_FIELD),
+                containsString(CORRECT_COMMENT_MESSAGE),
+                containsString(TIMESTAMP_FIELD)
             )
 
         assert(getListOfComments.count() == 5)
@@ -40,16 +48,14 @@ class CommentResourceTest {
     fun testGetCommentById() {
         `when`(commentService.getCommentById(1L)).thenReturn(getListOfComments[1])
         given()
-            .`when`().get("/comments/1")
+            .`when`().get("$URL/1")
             .then()
             .statusCode(200)
             .body(
-                containsString("postId"),
-                containsString("Another correct comment message"),
-                containsString("2011-12-03T10:15:30")
+                containsString(POST_ID_FIELD),
+                containsString(CORRECT_COMMENT_MESSAGE),
+                containsString(TIMESTAMP_FIELD)
             )
-//
-//        assert(getListOfComments.count() == 5)
 
         verify(commentService, Mockito.times(1)).getCommentById(1L);
     }
@@ -58,7 +64,7 @@ class CommentResourceTest {
     fun testGetWhitelistedComments() {
         `when`(commentService.getWhitelistedComments()).thenReturn(getWhiteListedComments)
         given()
-            .`when`().get("/comments/searchWhitelisted")
+            .`when`().get("$URL/searchWhitelisted")
             .then()
             .statusCode(200)
             .body(
@@ -74,7 +80,7 @@ class CommentResourceTest {
     fun testGetBlacklistedComments() {
         `when`(commentService.getBlacklistedComments()).thenReturn(getBlackListedComments)
         given()
-            .`when`().get("/comments/searchBlacklisted")
+            .`when`().get("$URL/searchBlacklisted")
             .then()
             .statusCode(200)
             .body(
@@ -88,33 +94,33 @@ class CommentResourceTest {
 
     private val getListOfComments = listOf(
         Comment(
-            "postId",
-            "Correct comment message",
-            "2011-12-03T10:15:30",
+            POST_ID_FIELD,
+            CORRECT_COMMENT_MESSAGE,
+            TIMESTAMP_FIELD,
             MessageType.WHITELIST
         ),
         Comment(
-            "postId",
-            "Another correct comment message",
-            "2011-12-03T10:15:30",
+            POST_ID_FIELD,
+            CORRECT_COMMENT_MESSAGE,
+            TIMESTAMP_FIELD,
             MessageType.WHITELIST
         ),
         Comment(
-            "postId",
-            "Comment message with blacklisted word - bollocks",
-            "2011-12-03T10:15:30",
+            POST_ID_FIELD,
+            "$INCORRECT_COMMENT_MESSAGE - bollocks",
+            TIMESTAMP_FIELD,
             MessageType.BLACKLIST
         ),
         Comment(
-            "postId",
-            "Comment message with blacklisted word - bullshit",
-            "2011-12-03T10:15:30",
+            POST_ID_FIELD,
+            "$INCORRECT_COMMENT_MESSAGE - bullshit",
+            TIMESTAMP_FIELD,
             MessageType.BLACKLIST
         ),
         Comment(
-            "postId",
-            "Comment message with blacklisted word - trash",
-            "2011-12-03T10:15:30",
+            POST_ID_FIELD,
+            "$INCORRECT_COMMENT_MESSAGE - trash",
+            TIMESTAMP_FIELD,
             MessageType.BLACKLIST
         )
     )
